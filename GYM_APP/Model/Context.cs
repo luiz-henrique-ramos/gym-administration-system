@@ -5,16 +5,17 @@ namespace GYM.Model
 {
     public class Context : DbContext
     {
-        public Context(DbContextOptions<Context> options) : base(options)
-        {
-        }
+
+        public string DbPath { get; }
 
         public Context()
         {
+            var folder = Environment.SpecialFolder.LocalApplicationData;
+            var path = Environment.GetFolderPath(folder);
+            DbPath = Path.Join(path, "users.db");
         }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlite("Data Source=C:\\Users\\Usuário\\source\\repos\\GYM_APP\\GYM_APP\\DB\\Users");
+        protected override void OnConfiguring(DbContextOptionsBuilder options)
+            => options.UseSqlite($"Data Source={DbPath}");
 
         public DbSet<User> Users { get; set; }
 
